@@ -10,7 +10,8 @@
 
 <style>
     @reference "/src/routes/layout.css";
-    :global(body) {
-        @apply bg-bg text-fg;
-    }
+	:global(body) {
+		@apply bg-bg text-fg;
+		font-family: 'Geist Mono', monospace;
+	}
 </style>

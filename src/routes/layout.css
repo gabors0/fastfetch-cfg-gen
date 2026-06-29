@@ -21,3 +21,39 @@
   --color-success: #81b29a;
   --color-warning: #dbc074;
 }
+
+/* geist-mono-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/geist-mono-v6-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* geist-mono-italic - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Geist Mono';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/fonts/geist-mono-v6-latin-italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* geist-mono-800 - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/fonts/geist-mono-v6-latin-800.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* geist-mono-800italic - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Geist Mono';
+  font-style: italic;
+  font-weight: 800;
+  src: url('/fonts/geist-mono-v6-latin-800italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
