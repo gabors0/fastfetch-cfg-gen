@@ -26,7 +26,7 @@
                 aria-expanded={showExport}
                 onclick={() => (showExport = !showExport)}
             >
-                Export -- {showExport ? "hide" : "show"}
+                Export [{showExport ? "hide" : "show"}]
             </button>
             <span class="md:hidden block">Export</span>
         </legend>
