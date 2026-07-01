@@ -12,6 +12,6 @@
     @reference "/src/routes/layout.css";
 	:global(body) {
 		@apply bg-bg text-fg;
-		font-family: 'Geist Mono', monospace;
+		font-family: 'Monaspace Argon NF', 'Geist Mono', monospace;
 	}
 </style>
