@@ -1,5 +1,105 @@
 <script lang="ts">
 	import PatternHeading from '$lib/PatternHeading.svelte';
+	import { defaultConfig } from '$lib/config/defaultConfig';
+
+	type ConfigValue =
+		string | number | boolean | null | string[] | number[] | Record<string, unknown>;
+	type ModuleConfig = Record<string, unknown> & { type: string };
+	type AppConfig = Record<string, unknown> & { modules: ModuleConfig[] };
+
+	let config = $state<AppConfig>(structuredClone(defaultConfig) as AppConfig);
+
+	function parsePath(path: string): string[] {
+		return path.replaceAll('[', '.').replaceAll(']', '').split('.');
+	}
+
+	function isModulePath(parts: string[]) {
+		return parts[0] === 'modules' && parts.length > 1;
+	}
+
+	function isRecord(value: unknown): value is Record<string, unknown> {
+		return typeof value === 'object' && value !== null;
+	}
+
+	function getNestedValue(
+		source: Record<string, unknown>,
+		parts: string[],
+		fallback: ConfigValue = ''
+	) {
+		let current: unknown = source;
+
+		for (const part of parts) {
+			if (!isRecord(current) || !(part in current)) {
+				return fallback;
+			}
+
+			current = current[part];
+		}
+
+		return (current ?? fallback) as ConfigValue;
+	}
+
+	function getConfigValue(path: string, fallback: ConfigValue = '') {
+		const parts = parsePath(path);
+
+		if (isModulePath(parts)) {
+			const [, moduleType, ...moduleParts] = parts;
+			const module = config.modules.find((item) => item.type === moduleType);
+
+			if (!module) return fallback;
+
+			return getNestedValue(module, moduleParts, fallback);
+		}
+
+		return getNestedValue(config, parts, fallback);
+	}
+
+	function setNestedValue(target: Record<string, unknown>, parts: string[], value: ConfigValue) {
+		let current = target;
+
+		for (const part of parts.slice(0, -1)) {
+			if (!isRecord(current[part])) {
+				current[part] = {};
+			}
+
+			current = current[part] as Record<string, unknown>;
+		}
+
+		const lastPart = parts.at(-1);
+
+		if (lastPart == null) return;
+
+		current[lastPart] = value;
+	}
+
+	function setConfigValue(path: string, value: ConfigValue) {
+		const parts = parsePath(path);
+
+		if (isModulePath(parts)) {
+			const [, moduleType, ...moduleParts] = parts;
+			const module = config.modules.find((item) => item.type === moduleType);
+
+			if (!module) return;
+
+			setNestedValue(module, moduleParts, value);
+			return;
+		}
+
+		setNestedValue(config, parts, value);
+	}
+
+	function inputValue(event: Event) {
+		return (event.currentTarget as HTMLInputElement).value;
+	}
+
+	function inputChecked(event: Event) {
+		return (event.currentTarget as HTMLInputElement).checked;
+	}
+
+	function numberInputValue(event: Event) {
+		const value = inputValue(event);
+		return value === '' ? null : Number(value);
+	}
 
 	let showExport = $state(true);
 	let activeTab = $state<'modules' | 'logo' | 'appearance' | 'formatting' | 'advanced'>('modules');
@@ -651,7 +751,46 @@
 	];
 
 	function valueOf(control: Control) {
-		return control.value == null ? '' : String(control.value);
+		const value = getConfigValue(control.path, control.value);
+		return value == null ? '' : String(value);
+	}
+
+	function checkedOf(control: Control) {
+		return getConfigValue(control.path, control.value) === true;
+	}
+
+	function moduleIndex(type: string) {
+		return config.modules.findIndex((item) => item.type === type);
+	}
+
+	function moduleEnabled(moduleItem: ModuleItem) {
+		return moduleIndex(moduleItem.type) !== -1;
+	}
+
+	function defaultModuleConfig(moduleItem: ModuleItem): ModuleConfig {
+		const defaultModules = defaultConfig.modules as ModuleConfig[] | undefined;
+		const existing = defaultModules?.find((item) => item.type === moduleItem.type);
+
+		return structuredClone(
+			existing ?? {
+				type: moduleItem.type,
+				...(moduleItem.keyIcon ? { keyIcon: moduleItem.keyIcon } : {}),
+				...(moduleItem.key ? { key: moduleItem.key } : {})
+			}
+		);
+	}
+
+	function setModuleEnabled(moduleItem: ModuleItem, enabled: boolean) {
+		const index = moduleIndex(moduleItem.type);
+
+		if (enabled && index === -1) {
+			config.modules.push(defaultModuleConfig(moduleItem));
+			return;
+		}
+
+		if (!enabled && index !== -1) {
+			config.modules.splice(index, 1);
+		}
 	}
 
 	function moduleSharedControls(module: ModuleItem): Control[] {
@@ -786,9 +925,16 @@
 										<label class:checkbox-row={control.type === 'checkbox'}>
 											<span>{control.label}</span>
 											{#if control.type === 'checkbox'}
-												<input type="checkbox" checked={control.value === true} />
+												<input
+													type="checkbox"
+													checked={checkedOf(control)}
+													onchange={(event) => setConfigValue(control.path, inputChecked(event))}
+												/>
 											{:else if control.type === 'select'}
-												<select value={valueOf(control)}>
+												<select
+													value={valueOf(control)}
+													onchange={(event) => setConfigValue(control.path, inputValue(event))}
+												>
 													{#each control.options ?? [] as option (option)}
 														<option value={option}>{option}</option>
 													{/each}
@@ -798,6 +944,13 @@
 													type={control.type}
 													value={valueOf(control)}
 													placeholder={control.placeholder ?? ''}
+													oninput={(event) =>
+														setConfigValue(
+															control.path,
+															control.type === 'number'
+																? numberInputValue(event)
+																: inputValue(event)
+														)}
 												/>
 											{/if}
 											<small>{control.path}</small>
@@ -809,16 +962,24 @@
 					</section>
 				{:else}
 					<section class="module-list" aria-label="Configured modules">
-						{#each modules as module (module.type)}
-							{@const controls = moduleControls(module)}
+						{#each modules as moduleItem (moduleItem.type)}
+							{@const controls = moduleControls(moduleItem)}
 							<details class="module-row" open={controls.length > 0 && controls.length < 6}>
 								<summary>
-									<span class="module-type">{module.type}</span>
-									{#if module.keyIcon}
-										<span class="module-chip">{module.keyIcon}</span>
+									<div>
+										<input
+											type="checkbox"
+											checked={moduleEnabled(moduleItem)}
+											onclick={(event) => event.stopPropagation()}
+											onchange={(event) => setModuleEnabled(moduleItem, inputChecked(event))}
+										/>
+										<span class="module-type">{moduleItem.type}</span>
+									</div>
+									{#if moduleItem.keyIcon}
+										<span class="module-chip">{moduleItem.keyIcon}</span>
 									{/if}
-									{#if module.key}
-										<span class="module-chip">key "{module.key}"</span>
+									{#if moduleItem.key}
+										<span class="module-chip">key "{moduleItem.key}"</span>
 									{/if}
 									<span class="module-count">
 										{controls.length ? `${controls.length} settings` : 'default'}
@@ -830,9 +991,16 @@
 											<label class:checkbox-row={control.type === 'checkbox'}>
 												<span>{control.label}</span>
 												{#if control.type === 'checkbox'}
-													<input type="checkbox" checked={control.value === true} />
+													<input
+														type="checkbox"
+														checked={checkedOf(control)}
+														onchange={(event) => setConfigValue(control.path, inputChecked(event))}
+													/>
 												{:else if control.type === 'select'}
-													<select value={valueOf(control)}>
+													<select
+														value={valueOf(control)}
+														onchange={(event) => setConfigValue(control.path, inputValue(event))}
+													>
 														{#each control.options ?? [] as option (option)}
 															<option value={option}>{option}</option>
 														{/each}
@@ -842,6 +1010,13 @@
 														type={control.type}
 														value={valueOf(control)}
 														placeholder={control.placeholder ?? ''}
+														oninput={(event) =>
+															setConfigValue(
+																control.path,
+																control.type === 'number'
+																	? numberInputValue(event)
+																	: inputValue(event)
+															)}
 													/>
 												{/if}
 												<small>{control.path}</small>
@@ -869,12 +1044,12 @@
 			<span class="block md:hidden">Export</span>
 		</legend>
 		{#if showExport}
-			yo
+			<pre class="export-output">{JSON.stringify(config, null, 2)}</pre>
 		{/if}
 	</fieldset>
 </div>
 
-<style>
+<style lang="postcss">
 	@reference "/src/routes/layout.css";
 	fieldset {
 		@apply m-0 min-w-0 border-4 border-bg-dim px-2;
@@ -948,5 +1123,8 @@
 	}
 	.module-controls {
 		@apply border-t-2 border-bg-dim p-1.5;
+	}
+	.export-output {
+		@apply h-full overflow-auto text-xs whitespace-pre-wrap text-fg-muted;
 	}
 </style>
