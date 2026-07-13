@@ -17,47 +17,205 @@
   --color-border: #29394f;
   --color-selection: #2b3b51;
 
-  --color-danger: #c94f6d;
-  --color-success: #81b29a;
-  --color-warning: #dbc074;
+  --color-black: #393b44;
+  --color-red: #c94f6d;
+  --color-green: #81b29a;
+  --color-yellow: #dbc074;
+  --color-blue: #719cd6;
+  --color-magenta: #9d79d6;
+  --color-cyan: #63cdcf;
+  --color-white: #dfdfe0;
+
+  --color-light-black: #575860;
+  --color-light-red: #d16983;
+  --color-light-green: #8ebaa4;
+  --color-light-yellow: #e0c989;
+  --color-light-blue: #86abdc;
+  --color-light-magenta: #baa1e2;
+  --color-light-cyan: #7ad5d6;
+  --color-light-white: #e4e4e5;
 }
 
-/* geist-mono-regular - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../lib/fonts/geist-mono-v6-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+[data-theme='dayfox'] {
+  --color-bg: #e4dcd4;
+  --color-bg-soft: #f6f2ee;
+  --color-bg-dim: #dbd1dd;
+  --color-bg-muted: #d3c7bb;
+
+  --color-fg: #302b5d;
+  --color-fg-muted: #643f61;
+  --color-fg-dim: #824d5b;
+
+  --color-accent: #2848a9;
+  --color-accent-hover: #4863b6;
+  --color-accent-muted: #223d90;
+
+  --color-border: #d3c7bb;
+  --color-selection: #e7d2be;
+
+  --color-black: #352c24;
+  --color-red: #a5222f;
+  --color-green: #396847;
+  --color-yellow: #ac5402;
+  --color-blue: #2848a9;
+  --color-magenta: #6e33ce;
+  --color-cyan: #287980;
+  --color-white: #f2e9e1;
+
+  --color-light-black: #534c45;
+  --color-light-red: #b3434e;
+  --color-light-green: #577f63;
+  --color-light-yellow: #b86e28;
+  --color-light-blue: #4863b6;
+  --color-light-magenta: #8452d5;
+  --color-light-cyan: #488d93;
+  --color-light-white: #f4ece6;
 }
 
-/* geist-mono-italic - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Geist Mono';
-  font-style: italic;
-  font-weight: 400;
-  src: url('../lib/fonts/geist-mono-v6-latin-italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+[data-theme='duskfox'] {
+  --color-bg: #191726;
+  --color-bg-soft: #232136;
+  --color-bg-dim: #2d2a45;
+  --color-bg-muted: #373354;
+
+  --color-fg: #eae8ff;
+  --color-fg-muted: #cdcbe0;
+  --color-fg-dim: #6e6a86;
+
+  --color-accent: #569fba;
+  --color-accent-hover: #65b1cd;
+  --color-accent-muted: #4a869c;
+
+  --color-border: #373354;
+  --color-selection: #433c59;
+
+  --color-black: #393552;
+  --color-red: #eb6f92;
+  --color-green: #a3be8c;
+  --color-yellow: #f6c177;
+  --color-blue: #569fba;
+  --color-magenta: #c4a7e7;
+  --color-cyan: #9ccfd8;
+  --color-white: #e0def4;
+
+  --color-light-black: #47407d;
+  --color-light-red: #f083a2;
+  --color-light-green: #b1d196;
+  --color-light-yellow: #f9cb8c;
+  --color-light-blue: #65b1cd;
+  --color-light-magenta: #ccb1ed;
+  --color-light-cyan: #a6dae3;
+  --color-light-white: #e2e0f7;
 }
 
-/* geist-mono-800 - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Geist Mono';
-  font-style: normal;
-  font-weight: 800;
-  src: url('../lib/fonts/geist-mono-v6-latin-800.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+[data-theme='nordfox'] {
+  --color-bg: #232831;
+  --color-bg-soft: #2e3440;
+  --color-bg-dim: #39404f;
+  --color-bg-muted: #444c5e;
+
+  --color-fg: #c7cdd9;
+  --color-fg-muted: #abb1bb;
+  --color-fg-dim: #7e8188;
+
+  --color-accent: #81a1c1;
+  --color-accent-hover: #8cafd2;
+  --color-accent-muted: #668aab;
+
+  --color-border: #444c5e;
+  --color-selection: #3e4a5b;
+
+  --color-black: #3b4252;
+  --color-red: #bf616a;
+  --color-green: #a3be8c;
+  --color-yellow: #ebcb8b;
+  --color-blue: #81a1c1;
+  --color-magenta: #b48ead;
+  --color-cyan: #88c0d0;
+  --color-white: #e5e9f0;
+
+  --color-light-black: #465780;
+  --color-light-red: #d06f79;
+  --color-light-green: #b1d196;
+  --color-light-yellow: #f0d399;
+  --color-light-blue: #8cafd2;
+  --color-light-magenta: #c895bf;
+  --color-light-cyan: #93ccdc;
+  --color-light-white: #e7ecf4;
 }
 
-/* geist-mono-800italic - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Geist Mono';
-  font-style: italic;
-  font-weight: 800;
-  src: url('../lib/fonts/geist-mono-v6-latin-800italic.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+[data-theme='terafox'] {
+  --color-bg: #0f1c1e;
+  --color-bg-soft: #152528;
+  --color-bg-dim: #1d3337;
+  --color-bg-muted: #254147;
+
+  --color-fg: #eaeeee;
+  --color-fg-muted: #cbd9d8;
+  --color-fg-dim: #587b7b;
+
+  --color-accent: #5a93aa;
+  --color-accent-hover: #73a3b7;
+  --color-accent-muted: #4d7d90;
+
+  --color-border: #254147;
+  --color-selection: #293e40;
+
+  --color-black: #2f3239;
+  --color-red: #e85c51;
+  --color-green: #7aa4a1;
+  --color-yellow: #fda47f;
+  --color-blue: #5a93aa;
+  --color-magenta: #ad5c7c;
+  --color-cyan: #a1cdd8;
+  --color-white: #ebebeb;
+
+  --color-light-black: #4e5157;
+  --color-light-red: #eb746b;
+  --color-light-green: #8eb2af;
+  --color-light-yellow: #fdb292;
+  --color-light-blue: #73a3b7;
+  --color-light-magenta: #b97490;
+  --color-light-cyan: #afd4de;
+  --color-light-white: #eeeeee;
 }
-/* google-sans-code-regular - latin */
+
+[data-theme='carbonfox'] {
+  --color-bg: #0c0c0c;
+  --color-bg-soft: #161616;
+  --color-bg-dim: #252525;
+  --color-bg-muted: #353535;
+
+  --color-fg: #f9fbff;
+  --color-fg-muted: #b6b8bb;
+  --color-fg-dim: #7b7c7e;
+
+  --color-accent: #78a9ff;
+  --color-accent-hover: #8cb6ff;
+  --color-accent-muted: #6690d9;
+
+  --color-border: #353535;
+  --color-selection: #2a2a2a;
+
+  --color-black: #282828;
+  --color-red: #ee5396;
+  --color-green: #25be6a;
+  --color-yellow: #08bdba;
+  --color-blue: #78a9ff;
+  --color-magenta: #be95ff;
+  --color-cyan: #33b1ff;
+  --color-white: #dfdfe0;
+
+  --color-light-black: #484848;
+  --color-light-red: #f16da6;
+  --color-light-green: #46c880;
+  --color-light-yellow: #2dc7c4;
+  --color-light-blue: #8cb6ff;
+  --color-light-magenta: #c8a5ff;
+  --color-light-cyan: #52bdff;
+  --color-light-white: #e4e4e5;
+}
+
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Monaspace Argon NF';
@@ -66,7 +224,6 @@
   src: url('/src/lib/fonts/MonaspaceArgonNF-Regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* google-sans-code-italic - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Monaspace Argon NF';

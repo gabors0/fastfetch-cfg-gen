@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import PatternHeading from '$lib/components/PatternHeading.svelte';
 	import { defaultConfig } from '$lib/config/defaultConfig';
 	import type { AppConfig, ConfigValue, ModuleConfig, Control, Group, ModuleItem } from '$lib/config/types';
@@ -8,6 +9,35 @@
 	import Preview from '$lib/components/preview/Preview.svelte';
 
 	let config = $state<AppConfig>(structuredClone(defaultConfig) as AppConfig);
+	const themes = [
+		{ value: 'nightfox', label: 'Nightfox', background: '#131a24' },
+		{ value: 'dayfox', label: 'Dayfox', background: '#e4dcd4' },
+		{ value: 'duskfox', label: 'Duskfox', background: '#191726' },
+		{ value: 'nordfox', label: 'Nordfox', background: '#232831' },
+		{ value: 'terafox', label: 'Terafox', background: '#0f1c1e' },
+		{ value: 'carbonfox', label: 'Carbonfox', background: '#0c0c0c' }
+	] as const;
+	type ThemeName = (typeof themes)[number]['value'];
+
+	let activeTheme = $state<ThemeName>('nightfox');
+
+	function isThemeName(value: string): value is ThemeName {
+		return themes.some((theme) => theme.value === value);
+	}
+
+	function applyTheme(theme: ThemeName) {
+		activeTheme = theme;
+		document.documentElement.dataset.theme = theme;
+		localStorage.setItem('fastfetch-theme', theme);
+	}
+
+	onMount(() => {
+		const savedTheme = localStorage.getItem('fastfetch-theme');
+
+		if (savedTheme && isThemeName(savedTheme)) {
+			applyTheme(savedTheme);
+		}
+	});
 
 	function inputValue(event: Event) {
 		return (event.currentTarget as HTMLInputElement).value;
@@ -205,7 +235,25 @@
 			layoutRows()
 		]}
 	>
-		<div class="border-4 border-bg-dim text-accent md:col-span-2">fastfetch config generator</div>
+		<div
+			class="flex items-center justify-between gap-3 border-4 border-bg-dim text-accent md:col-span-2"
+		>
+			<span>fastfetch config generator</span>
+			<div class="flex items-center gap-1.5" role="group" aria-label="Theme">
+				{#each themes as theme (theme.value)}
+					<button
+						type="button"
+						class="theme-swatch"
+						class:active-theme-swatch={activeTheme === theme.value}
+						style:background-color={theme.background}
+						aria-label={theme.label}
+						aria-pressed={activeTheme === theme.value}
+						title={theme.label}
+						onclick={() => applyTheme(theme.value)}
+					></button>
+				{/each}
+			</div>
+		</div>
 		<fieldset class="overflow-hidden">
 			<legend>
 				<span class="hidden items-center gap-1 text-accent-muted md:flex">
@@ -418,6 +466,17 @@
 	input:focus,
 	select:focus {
 		@apply border-accent;
+	}
+	.theme-swatch {
+		@apply size-4 cursor-pointer border-2 border-fg-dim;
+	}
+	.theme-swatch:hover,
+	.theme-swatch:focus-visible,
+	.active-theme-swatch {
+		@apply border-accent outline-none;
+	}
+	.active-theme-swatch {
+		@apply ring-1 ring-accent ring-offset-1 ring-offset-bg;
 	}
 	input[type='checkbox'] {
 		@apply my-1 h-5 min-h-5 w-[3ch] cursor-pointer appearance-none border-0 bg-transparent p-0 text-fg;
