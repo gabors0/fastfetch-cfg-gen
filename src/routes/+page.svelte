@@ -265,7 +265,15 @@
 													onchange={(event) => setConfigValue(config, control.path, inputValue(event))}
 												>
 													{#each control.options ?? [] as option (option)}
-														<option value={option}>{option}</option>
+														{#if typeof option === 'string'}
+															<option value={option}>{option}</option>
+														{:else}
+															<optgroup label={option.label}>
+																{#each option.options as groupedOption (groupedOption)}
+																	<option value={groupedOption}>{groupedOption}</option>
+																{/each}
+															</optgroup>
+														{/if}
 													{/each}
 												</select>
 											{:else}
@@ -332,7 +340,15 @@
 														onchange={(event) => setConfigValue(config, control.path, inputValue(event))}
 													>
 														{#each control.options ?? [] as option (option)}
-															<option value={option}>{option}</option>
+															{#if typeof option === 'string'}
+																<option value={option}>{option}</option>
+															{:else}
+																<optgroup label={option.label}>
+																	{#each option.options as groupedOption (groupedOption)}
+																		<option value={groupedOption}>{groupedOption}</option>
+																	{/each}
+																</optgroup>
+															{/if}
 														{/each}
 													</select>
 												{:else}

@@ -1,22 +1,15 @@
 import type { Group, ModuleItem } from '$lib/config/types';
 
 export const logoTypeOptions = [
-    'auto',
-    'builtin',
-    'small',
-    'file',
-    'file-raw',
-    'data',
-    'data-raw',
-    'command-raw',
-    'sixel',
-    'kitty',
-    'kitty-direct',
-    'kitty-icat',
-    'iterm',
-    'chafa',
-    'raw',
-    'none'
+    { label: 'Built-in', options: ['auto', 'builtin', 'small'] },
+    { label: 'File', options: ['file', 'file-raw'] },
+    { label: 'Data', options: ['data', 'data-raw'] },
+    { label: 'Command', options: ['command-raw'] },
+    {
+        label: 'Image',
+        options: ['sixel', 'kitty', 'kitty-direct', 'kitty-icat', 'iterm', 'chafa']
+    },
+    { label: 'Other', options: ['raw', 'none'] }
 ];
 export const logoPositionOptions = ['left', 'top', 'right'];
 export const sizePrefixOptions = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];

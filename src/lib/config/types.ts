@@ -4,12 +4,17 @@ export type ModuleConfig = Record<string, unknown> & { type: string };
 export type AppConfig = Record<string, unknown> & { modules: ModuleConfig[] };
 export type ControlType = 'text' | 'number' | 'checkbox' | 'select';
 
+export type SelectOptionGroup = {
+    label: string;
+    options: string[];
+};
+
 export type Control = {
     label: string;
     path: string;
     type: ControlType;
     value?: string | number | boolean | null;
-    options?: string[];
+    options?: (string | SelectOptionGroup)[];
     placeholder?: string;
 };
 
