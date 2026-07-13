@@ -1,7 +1,8 @@
 export type ConfigValue =
     string | number | boolean | null | string[] | number[] | Record<string, unknown>;
 export type ModuleConfig = Record<string, unknown> & { type: string };
-export type AppConfig = Record<string, unknown> & { modules: ModuleConfig[] };
+export type LogoConfig = Record<string, unknown> & { type: string };
+export type AppConfig = Record<string, unknown> & { logo: LogoConfig; modules: ModuleConfig[] };
 export type ControlType = 'text' | 'number' | 'checkbox' | 'select';
 
 export type SelectOptionGroup = {
