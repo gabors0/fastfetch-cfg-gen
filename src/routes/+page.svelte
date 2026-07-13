@@ -1,9 +1,11 @@
 <script lang="ts">
-	import PatternHeading from '$lib/PatternHeading.svelte';
+	import PatternHeading from '$lib/components/PatternHeading.svelte';
 	import { defaultConfig } from '$lib/config/defaultConfig';
 	import type { AppConfig, ConfigValue, ModuleConfig, Control, Group, ModuleItem } from '$lib/config/types';
 	import { logoGroups, appearanceGroups, formattingGroups, advancedGroups, modules } from '$lib/config/formSchema';
 	import { getConfigValue, setConfigValue } from '$lib/config/helpers';
+
+	import Preview from '$lib/components/preview/Preview.svelte';
 
 	let config = $state<AppConfig>(structuredClone(defaultConfig) as AppConfig);
 
@@ -220,7 +222,7 @@
 				<span class="block md:hidden">Preview</span>
 			</legend>
 			{#if showPreview}
-				yo
+				<Preview config={config} />
 			{/if}
 		</fieldset>
 	<fieldset class="min-h-128 md:row-span-2 md:min-h-0">
