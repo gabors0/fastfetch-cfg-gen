@@ -263,8 +263,8 @@
 				{#each tabs as tab (tab.id)}
 					<button
 						type="button"
-						class:active-tab={activeTab === tab.id}
-						class="tab-button"
+						class:text-accent={activeTab === tab.id}
+						class="shrink-0 cursor-pointer px-2 pb-0.5 text-sm text-fg-muted hover:text-accent"
 						aria-pressed={activeTab === tab.id}
 						onclick={() => (activeTab = tab.id)}
 					>
@@ -277,12 +277,19 @@
 				{#if activeTab !== 'modules'}
 					<section aria-label={`${activeTabLabel()} settings`}>
 						{#each activeGroups() as group (group.title)}
-							<div class="setting-group">
+							<div class="py-1 first:pt-0">
 								<PatternHeading title={group.title} />
-								<div class="control-grid">
+								<div class="grid grid-cols-1 gap-1.5 sm:grid-cols-2 xl:grid-cols-3">
 									{#each group.controls as control (control.path)}
-										<label class:checkbox-row={control.type === 'checkbox'}>
-											<span class:italic={control.noPreview}>{control.label}</span>
+										<label
+											class:items-start={control.type === 'checkbox'}
+											class="grid min-w-0 gap-0.5 text-sm text-fg-muted"
+										>
+											<span
+												class:italic={control.noPreview}
+												class="overflow-hidden text-ellipsis whitespace-nowrap"
+												>{control.label}</span
+											>
 											{#if control.type === 'checkbox'}
 												<input
 													type="checkbox"
@@ -323,7 +330,7 @@
 														)}
 												/>
 											{/if}
-											<small>{control.path}</small>
+											<small class:col-auto={control.type === 'checkbox'}>{control.path}</small>
 										</label>
 									{/each}
 								</div>
@@ -331,11 +338,14 @@
 						{/each}
 					</section>
 				{:else}
-					<section class="module-list" aria-label="Configured modules">
+					<!-- modules tab -->
+					<section class="grid gap-2 py-2 first:py-0" aria-label="Configured modules">
 						{#each modules as moduleItem (moduleItem.type)}
 							{@const controls = moduleControls(moduleItem)}
-							<details class="module-row">
-								<summary>
+							<details class="border-2 border-bg-dim bg-bg-soft">
+								<summary
+									class="grid cursor-pointer grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted"
+								>
 									<div>
 										<input
 											type="checkbox"
@@ -343,15 +353,26 @@
 											onclick={(event) => event.stopPropagation()}
 											onchange={(event) => setModuleEnabled(moduleItem, inputChecked(event))}
 										/>
-										<span class="module-type">{moduleItem.type}</span>
+										<span
+											class="overflow-hidden font-bold text-ellipsis whitespace-nowrap text-accent"
+											>{moduleItem.type}</span
+										>
 									</div>
-									ok
 								</summary>
 								{#if controls.length}
-									<div class="control-grid module-controls">
+									<div
+										class="grid grid-cols-1 gap-1.5 border-t-2 border-bg-dim p-1.5 sm:grid-cols-2 xl:grid-cols-3"
+									>
 										{#each controls as control (control.path)}
-											<label class:checkbox-row={control.type === 'checkbox'}>
-												<span class:italic={control.noPreview}>{control.label}</span>
+											<label
+												class:items-start={control.type === 'checkbox'}
+												class="grid min-w-0 gap-0.5 text-sm text-fg-muted"
+											>
+												<span
+													class:italic={control.noPreview}
+													class="overflow-hidden text-ellipsis whitespace-nowrap"
+													>{control.label}</span
+												>
 												{#if control.type === 'checkbox'}
 													<input
 														type="checkbox"
@@ -392,7 +413,7 @@
 															)}
 													/>
 												{/if}
-												<small>{control.path}</small>
+												<small class:col-auto={control.type === 'checkbox'}>{control.path}</small>
 											</label>
 										{/each}
 									</div>
@@ -422,7 +443,7 @@
 			<span class="block md:hidden">Export</span>
 		</legend>
 		{#if showExport}
-			<pre class="export-output">{exportJson}</pre>
+			<pre class="h-full overflow-auto text-xs whitespace-pre-wrap text-fg-muted">{exportJson}</pre>
 		{/if}
 	</fieldset>
 </div>
@@ -458,54 +479,7 @@
 	small {
 		@apply block overflow-hidden text-xs text-ellipsis whitespace-nowrap text-fg-dim;
 	}
-	.tab-button {
-		@apply shrink-0 cursor-pointer px-2 pb-0.5 text-sm text-fg-muted;
-	}
-	.tab-button:hover,
-	.active-tab {
-		@apply text-accent;
-	}
-	.setting-group {
-		@apply py-1 first:pt-0;
-	}
-	.control-grid {
-		@apply grid grid-cols-1 gap-1.5 sm:grid-cols-2 xl:grid-cols-3;
-	}
-	.control-grid label {
-		@apply grid min-w-0 gap-0.5 text-sm text-fg-muted;
-	}
-	.control-grid label > span {
-		@apply overflow-hidden text-ellipsis whitespace-nowrap;
-	}
-	.checkbox-row {
-		@apply items-start;
-	}
-	.checkbox-row small {
-		@apply col-auto;
-	}
-	.module-list {
-		@apply grid gap-2 py-2 first:py-0;
-	}
-	.module-row {
-		@apply border-2 border-bg-dim bg-bg-soft;
-	}
-	.module-row summary {
-		@apply grid cursor-pointer grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-2 py-2 text-sm text-fg-muted;
-	}
-	.module-type {
-		@apply overflow-hidden font-bold text-ellipsis whitespace-nowrap text-accent;
-	}
-	.module-chip,
-	.module-count {
-		@apply text-xs whitespace-nowrap text-fg-dim;
-	}
-	.module-controls {
-		@apply border-t-2 border-bg-dim p-1.5;
-	}
 	.legend-action {
 		@apply cursor-pointer hover:underline;
-	}
-	.export-output {
-		@apply h-full overflow-auto text-xs whitespace-pre-wrap text-fg-muted;
 	}
 </style>
