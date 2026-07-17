@@ -7,5 +7,5 @@
 </script>
 
 <pre class="text-xs">
-<PreviewLogo logo={config.logo.type} />
+<PreviewLogo logo={config.logo} />
 </pre>
