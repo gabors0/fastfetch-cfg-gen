@@ -1,42 +1,25 @@
-# sv
+# ff-cfg-gen >> [ff.gs0.me](https://ff.gs0.me)
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A browser-based editor with the goal of making [fastfetch](https://github.com/fastfetch-cli/fastfetch) configuration files easier.
 
-## Creating a project
+> This project is currently in alpha. The generated configs should mostly work tho
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
+- Most if not all options found in the fastfetch json schema can be toggled or edited
+- Mostly-accurate live preview (*italic text: the control doesn't affect the preview*)
+- Download or copy the created config
 
-```sh
-# create a new project
-npx sv create my-app
-```
+## Todo
+#### Big
+- Share configs with a share code or by url
+- Add, remove and change the order of the modules
+- Import a config to edit
+#### Small
+- Add color support to the preview
 
-To recreate this project with the same configuration:
+## Development
+The project uses Bun, SvelteKit with Svelte 5, Tailwind v4 and Vite.
 
-```sh
-# recreate this project
-bun x sv@0.16.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:vercel" --install bun ./
-```
+`bun i`, `bun run dev`, blah blah blah
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Open a pr for literally anything related
