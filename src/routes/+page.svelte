@@ -1,8 +1,14 @@
 <script lang="ts">
 	import PatternHeading from '$lib/components/PatternHeading.svelte';
 	import { defaultConfig } from '$lib/config/defaultConfig';
-	import type { AppConfig, ModuleConfig, Control, Group, ModuleItem } from '$lib/config/types';
-	import { logoGroups, appearanceGroups, formattingGroups, advancedGroups, modules } from '$lib/config/formSchema';
+	import type { AppConfig, ModuleEntry, Control, Group, ModuleItem } from '$lib/config/types';
+	import {
+		logoGroups,
+		appearanceGroups,
+		formattingGroups,
+		advancedGroups,
+		modules
+	} from '$lib/config/formSchema';
 	import { getConfigValue, setConfigValue } from '$lib/config/helpers';
 
 	import Preview from '$lib/components/preview/Preview.svelte';
@@ -34,7 +40,6 @@
 		{ id: 'advanced', label: 'Advanced' }
 	] as const;
 
-
 	function valueOf(control: Control) {
 		const value = getConfigValue(config, control.path, control.value);
 		return value == null ? '' : String(value);
@@ -45,16 +50,24 @@
 	}
 
 	function moduleIndex(type: string) {
-		return config.modules.findIndex((item) => item.type === type);
+		return config.modules.findIndex((item) =>
+			typeof item === 'string' ? item === type : item.type === type
+		);
 	}
 
 	function moduleEnabled(moduleItem: ModuleItem) {
 		return moduleIndex(moduleItem.type) !== -1;
 	}
 
-	function defaultModuleConfig(moduleItem: ModuleItem): ModuleConfig {
-		const defaultModules = defaultConfig.modules as ModuleConfig[] | undefined;
-		const existing = defaultModules?.find((item) => item.type === moduleItem.type);
+	function moduleType(module: ModuleEntry) {
+		return typeof module === 'string' ? module : module.type;
+	}
+
+	function defaultModuleConfig(moduleItem: ModuleItem): ModuleEntry {
+		const defaultModules = defaultConfig.modules as AppConfig['modules'] | undefined;
+		const existing = defaultModules?.find((item) =>
+			typeof item === 'string' ? item === moduleItem.type : item.type === moduleItem.type
+		);
 
 		return structuredClone(
 			existing ?? {
@@ -69,12 +82,25 @@
 		const index = moduleIndex(moduleItem.type);
 
 		if (enabled && index === -1) {
-			config.modules.push(defaultModuleConfig(moduleItem));
+			const catalogIndex = modules.findIndex((item) => item.type === moduleItem.type);
+			const insertAt = config.modules.findIndex((item) => {
+				const itemCatalogIndex = modules.findIndex(
+					(catalogItem) => catalogItem.type === moduleType(item)
+				);
+				return itemCatalogIndex > catalogIndex;
+			});
+			const targetIndex = insertAt === -1 ? config.modules.length : insertAt;
+
+			config.modules = [
+				...config.modules.slice(0, targetIndex),
+				defaultModuleConfig(moduleItem),
+				...config.modules.slice(targetIndex)
+			];
 			return;
 		}
 
 		if (!enabled && index !== -1) {
-			config.modules.splice(index, 1);
+			config.modules = config.modules.filter((_, moduleIndex) => moduleIndex !== index);
 		}
 	}
 
@@ -199,31 +225,31 @@
 	}
 </script>
 
-	<div
-		class={[
-			'm-2 grid min-h-[calc(100dvh-4.25rem)] grid-cols-1 gap-x-3 gap-y-1 *:p-2 md:h-[calc(100dvh-4.25rem)] md:grid-cols-2',
-			layoutRows()
-		]}
-	>
-		<fieldset class="overflow-hidden">
-			<legend>
-				<span class="hidden items-center gap-1 text-accent-muted md:flex">
-					Preview
-					<button
-						type="button"
-						class="legend-action"
-						aria-expanded={showPreview}
-						onclick={() => (showPreview = !showPreview)}
-					>
-						[{showPreview ? 'hide' : 'show'}]
-					</button>
-				</span>
-				<span class="block md:hidden">Preview</span>
-			</legend>
-			{#if showPreview}
-				<Preview config={config} />
-			{/if}
-		</fieldset>
+<div
+	class={[
+		'm-2 grid min-h-[calc(100dvh-4.25rem)] grid-cols-1 gap-x-3 gap-y-1 *:p-2 md:h-[calc(100dvh-4.25rem)] md:grid-cols-2',
+		layoutRows()
+	]}
+>
+	<fieldset class="min-h-0 overflow-auto">
+		<legend>
+			<span class="hidden items-center gap-1 text-accent-muted md:flex">
+				Preview
+				<button
+					type="button"
+					class="legend-action"
+					aria-expanded={showPreview}
+					onclick={() => (showPreview = !showPreview)}
+				>
+					[{showPreview ? 'hide' : 'show'}]
+				</button>
+			</span>
+			<span class="block md:hidden">Preview</span>
+		</legend>
+		{#if showPreview}
+			<Preview {config} />
+		{/if}
+	</fieldset>
 	<fieldset class="min-h-128 md:row-span-2 md:min-h-0">
 		<legend>Config</legend>
 		<div class="flex h-full min-h-0 flex-col gap-2">
@@ -258,12 +284,14 @@
 												<input
 													type="checkbox"
 													checked={checkedOf(control)}
-													onchange={(event) => setConfigValue(config, control.path, inputChecked(event))}
+													onchange={(event) =>
+														setConfigValue(config, control.path, inputChecked(event))}
 												/>
 											{:else if control.type === 'select'}
 												<select
 													value={valueOf(control)}
-													onchange={(event) => setConfigValue(config, control.path, inputValue(event))}
+													onchange={(event) =>
+														setConfigValue(config, control.path, inputValue(event))}
 												>
 													{#each control.options ?? [] as option (option)}
 														{#if typeof option === 'string'}
@@ -333,12 +361,14 @@
 													<input
 														type="checkbox"
 														checked={checkedOf(control)}
-														onchange={(event) => setConfigValue(config, control.path, inputChecked(event))}
+														onchange={(event) =>
+															setConfigValue(config, control.path, inputChecked(event))}
 													/>
 												{:else if control.type === 'select'}
 													<select
 														value={valueOf(control)}
-														onchange={(event) => setConfigValue(config, control.path, inputValue(event))}
+														onchange={(event) =>
+															setConfigValue(config, control.path, inputValue(event))}
 													>
 														{#each control.options ?? [] as option (option)}
 															{#if typeof option === 'string'}

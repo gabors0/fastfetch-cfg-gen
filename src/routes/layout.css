@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@theme {
+@theme { /* nightfox */
   --color-bg: #131a24;
   --color-bg-soft: #192330;
   --color-bg-dim: #212e3f;

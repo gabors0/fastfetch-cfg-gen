@@ -5,12 +5,6 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
-	import { VERSION, STATUS } from '$lib/version';
-	const statusSymbols = {
-      alpha: 'α',
-      beta: 'β'
-    };
-
 	let { children } = $props();
 
 	const themes = [
@@ -48,7 +42,7 @@
 <header
 	class="fixed top-2 right-2 left-2 z-10 flex h-12 items-center justify-between gap-3 border-4 border-bg-dim bg-bg py-2 px-3 text-accent"
 >
-	<span>fastfetch config generator <a href="https://github.com/gabors0/fastfetch-cfg-gen" target="_blank" class="text-fg-dim">v{VERSION} {statusSymbols[STATUS]}</a></span>
+	<span>fastfetch config generator <a href="https://github.com/gabors0/fastfetch-cfg-gen" target="_blank" class="text-fg-dim">alpha ver.</a></span>
 	<div class="flex items-center gap-3 flex-row">
 		<div class="flex items-center gap-1.5" role="group" aria-label="Theme">
 			{#each themes as theme (theme.value)}
