@@ -49,7 +49,7 @@
 		if (keyType === 'none') return '';
 
 		const preview = modulePreviews[module.type];
-		const key = stringOption(module, 'key', preview?.key ?? module.type);
+		const key = stringOption(module, 'key') || preview?.key || module.type;
 		const icon = stringOption(module, 'keyIcon');
 
 		if (keyType === 'icon') return icon || key;
@@ -89,7 +89,10 @@
 		{#if typeof module === 'string' || module.type === 'break'}
 			<div class="h-3" aria-hidden="true"></div>
 		{:else if module.type === 'title'}
-			<div>user@hostname</div>
+			{@const key = moduleKey(module)}
+			<div>
+				{#if key.trim()}<span>{key}{separator}</span>{/if}<span>user@hostname</span>
+			</div>
 		{:else if module.type === 'separator'}
 			<div>{separatorLine(module)}</div>
 		{:else if module.type === 'colors'}

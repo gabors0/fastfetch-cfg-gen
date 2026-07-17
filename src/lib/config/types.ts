@@ -18,6 +18,7 @@ export type Control = {
 	value?: string | number | boolean | null;
 	options?: (string | SelectOptionGroup)[];
 	placeholder?: string;
+	noPreview?: boolean;
 };
 
 export type Group = {

@@ -7,7 +7,8 @@
 		appearanceGroups,
 		formattingGroups,
 		advancedGroups,
-		modules
+		modules,
+		withPreviewStatus
 	} from '$lib/config/formSchema';
 	import { getConfigValue, setConfigValue } from '$lib/config/helpers';
 
@@ -163,9 +164,11 @@
 			value: ''
 		});
 
-		return controls.filter(
-			(control) => !module.controls.some((moduleControl) => moduleControl.path === control.path)
-		);
+		return controls
+			.filter(
+				(control) => !module.controls.some((moduleControl) => moduleControl.path === control.path)
+			)
+			.map(withPreviewStatus);
 	}
 
 	function moduleControls(module: ModuleItem) {
@@ -279,7 +282,7 @@
 								<div class="control-grid">
 									{#each group.controls as control (control.path)}
 										<label class:checkbox-row={control.type === 'checkbox'}>
-											<span>{control.label}</span>
+											<span class:italic={control.noPreview}>{control.label}</span>
 											{#if control.type === 'checkbox'}
 												<input
 													type="checkbox"
@@ -331,7 +334,7 @@
 					<section class="module-list" aria-label="Configured modules">
 						{#each modules as moduleItem (moduleItem.type)}
 							{@const controls = moduleControls(moduleItem)}
-							<details class="module-row" open={controls.length > 0 && controls.length < 6}>
+							<details class="module-row">
 								<summary>
 									<div>
 										<input
@@ -342,21 +345,13 @@
 										/>
 										<span class="module-type">{moduleItem.type}</span>
 									</div>
-									{#if moduleItem.keyIcon}
-										<span class="module-chip">{moduleItem.keyIcon}</span>
-									{/if}
-									{#if moduleItem.key}
-										<span class="module-chip">key "{moduleItem.key}"</span>
-									{/if}
-									<span class="module-count">
-										{controls.length ? `${controls.length} settings` : 'default'}
-									</span>
+									ok
 								</summary>
 								{#if controls.length}
 									<div class="control-grid module-controls">
 										{#each controls as control (control.path)}
 											<label class:checkbox-row={control.type === 'checkbox'}>
-												<span>{control.label}</span>
+												<span class:italic={control.noPreview}>{control.label}</span>
 												{#if control.type === 'checkbox'}
 													<input
 														type="checkbox"
