@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
@@ -59,13 +60,13 @@
 			{/each}
 		</div>
 		{#if page.url.pathname === '/'}
-			<a href="/about">About&gt;&gt;</a>
+			<a href="{resolve('/about')}">About&gt;&gt;</a>
 		{:else if page.url.pathname === '/about'}
-			<a href="/">&lt;&lt;Back</a>
+			<a href="{resolve('/')}">&lt;&lt;Back</a>
 		{/if}
 	</div>
 </header>
-<main class="pt-[3.25rem]">{@render children()}</main>
+<main class="pt-13">{@render children()}</main>
 
 <style lang="postcss">
 	@reference "/src/routes/layout.css";
